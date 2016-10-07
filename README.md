@@ -1,4 +1,4 @@
-# kivy-ballistics
+# Space Ballistics
 A game app called "Space Ballistics" developed with the kivy framework on python.
 I developed this app in my free time to try to learn about python and the game development process, so the app may not be 'complete' (namely I had to disable sdl sounds because they wouldn't run on the android launcher.)
 	
