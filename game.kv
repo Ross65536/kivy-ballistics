@@ -1,0 +1,289 @@
+#:kivy 1.9.0
+
+<Button>:
+	background_normal: 'Resources/button_normal.png'
+
+<Space_Background>:
+	canvas:
+		Rectangle:
+			source: 'Resources/backgrounds/space_bk.png'
+			pos: 0,0
+			size: app.screen_manager.height , app.screen_manager.height
+			
+<HeavyBullet>:
+	canvas: 
+		Ellipse:
+			pos: self.x - app.root.width/80, self.y - app.root.width/80
+			size: app.root.width/40 , app.root.width/40
+
+<StrangeMatterBullet>:
+	canvas: 
+		Rectangle:
+			source: 'Resources/strange_bullet_bullet.png'
+			pos: self.x - app.root.width/80, self.y - app.root.width/80
+			size: app.root.width/40 , app.root.width/40
+
+<Bullet>:
+	canvas:
+		Ellipse:
+			pos: self.x - app.root.width/160, self.y - app.root.width/160
+			size: app.root.width/80 , app.root.width/80
+
+<SettingsScreen>:
+	checkbox_SFX: sfxmuteid
+	checkbox_Music: musicid
+	Label:
+		
+		text: "[b]Settings[/b]"
+		
+		pos_hint: {'y': 0.35}
+		font_name: 'moonhouse'		
+		font_size: '50sp'
+		markup: True
+		halign: 'center'
+	Label:
+		text: "The Soundtracks in this game were modified from music found at http://www.purple-planet.com"
+		font_size: '9sp'
+		pos_hint: {'y': -0.47}
+		markup: True
+		halign: 'center'	
+
+	GridLayout:
+		spacing: root.width/40
+		padding: root.width/20
+		size_hint: 0.9, 0.3
+		pos_hint: {'y': 0.45}
+		cols: 2 
+		Label:
+			text: "Mute sound effects"
+		CheckBox:
+			id: sfxmuteid
+			size_hint_x: 0.2
+			active: False 
+			on_active: 
+				app.bMute_SFX=sfxmuteid.active
+		Label:
+			text: "Mute Music"
+		CheckBox:
+			id: musicid
+			size_hint_x: 0.2
+			active: False
+			on_active: 
+				app.bMute_soundtrack=musicid.active
+				#app.update_soundtrack_music()
+	Label:
+		text: "Choose Level art style:"
+		pos_hint: {'y': -0.06}
+	GridLayout:
+		spacing: root.width/40
+		padding: root.width/20
+		size_hint: 0.8, 0.3
+		pos_hint: {'x': 0.1, 'y': 0.2}
+		cols: 4
+		Label:
+			text: "simple (default)"
+		CheckBox:
+			id: art1id
+			group: 'art'
+			size_hint_x: 0.2
+			active: True 
+			on_active: 
+				app.bArt_White=art1id.active
+		Label:
+			text: "textured"
+		CheckBox:
+			id: art2id
+			group: 'art'
+			size_hint_x: 0.2
+			active: False
+			on_active: 
+				app.bArt_White= not (art2id.active)
+
+	Label:
+		text: "Choose MAX FPS (set at 30 if the application is lagging):"
+		pos_hint: {'y': -0.27}
+	GridLayout:
+		spacing: root.width/40
+		padding: root.width/20
+		size_hint: 0.8, 0.3
+		pos_hint: {'x': 0.1, 'y': 0.0}
+		cols: 4
+		Label:
+			text: "30"
+		CheckBox:
+			id: fps1id
+			group: 'fps'
+			size_hint_x: 0.2
+			active: False
+			on_active: 
+				app.bFPS_60T_30F= not(fps1id.active)
+				app.refresh_rate= 1.0/30
+				app.refresh_rate_balls_physics= 1.0/30
+				app.conf.set('graphics', 'maxfps', 30)
+				app.conf.write()
+		Label:
+			text: "60 (default)"
+		CheckBox:
+			id: fps2id
+			group: 'fps'
+			size_hint_x: 0.2
+			active: True
+			on_active: 
+				app.bFPS_60T_30F= fps2id.active
+				app.refresh_rate= 1.0/60
+				app.refresh_rate_balls_physics= 1.0/60
+				app.conf.set('graphics', 'maxfps', 60)
+				app.conf.write()
+<LevelSelectionButton>:
+	background_normal: 'Resources/button_normal.png'
+	background_disabled_normal: 'Resources/button_disabled_normal.png'
+	size_hint: 0.2, 0.2
+	
+	
+<LevelLostScreen>: 
+	lost_label: textid
+	FloatLayout:
+		Label:
+			id: textid
+			text: "Level Lost:\nRan out of bullets"
+			font_size: '40sp'
+			markup: True
+			halign: 'center'
+			pos_hint: {'y': 0.3}
+	BoxLayout:
+		orientation: 'vertical'
+		padding: root.width/8
+		spacing: root.width/12.0
+		size_hint: 1, 0.5
+		pos_hint: {'y': 0.12}
+		Button:
+            text: 'Try Again'
+            on_press: 
+				app.create_level()
+				app.screen_manager.current = 'game_screen'
+			size_hint: 1, 0.15
+        Button:
+            text: 'Main Menu'
+            on_press: 
+				app.button_text.text='Continue' 
+				root.manager.current = 'start_menu'
+			size_hint: 1, 0.15
+        
+<LevelWonScreenEnd>:
+	FloatLayout:
+		Label:
+			text: "[b]Level Won[/b][size=25]\n\nThanks for Playing![/size]"
+			font_size: '50sp'
+			markup: True
+			halign: 'center'
+			pos_hint: {'y': 0.3}
+	BoxLayout:
+		orientation: 'vertical'
+		padding: root.width/8.0
+		spacing: root.width/12.0
+		size_hint: 1, 0.5
+		pos_hint: {'y': 0.07} 
+		Button:
+            text: 'Try Again'
+            on_press: 
+				app.create_level()
+				app.screen_manager.current = 'game_screen'
+			size_hint: 1, 0.15
+        Button:
+            text: 'Main Menu'
+            on_press: 
+				app.button_text.text='Continue' 
+				root.manager.current = 'start_menu'
+			size_hint: 1, 0.15
+        
+<LevelWonScreen>:
+	FloatLayout:
+		Label:
+			text: "[b]Level Won[/b]"
+			font_size: '50sp'
+			markup: True
+			halign: 'center'
+			pos_hint: {'y': 0.35}
+	BoxLayout:
+		orientation: 'vertical'
+		padding: root.width/8.0
+		spacing: root.width/12.0
+		size_hint: 1, 0.65
+		pos_hint: {'y': 0.07}
+		Button:
+            text: 'Next Level'
+            on_press:
+				app.game_widget.current_level+=1 
+				app.create_level()
+				app.screen_game.space_background.rotate()
+				app.screen_manager.current = 'game_screen'
+			size_hint: 1, 0.15
+		Button:
+            text: 'Try Again'
+            on_press: 
+				app.create_level()
+				app.screen_manager.current = 'game_screen'
+			size_hint: 1, 0.15
+        Button:
+            text: 'Main Menu'
+            on_press: 
+				app.button_text.text='Continue' 
+				root.manager.current = 'start_menu'
+			size_hint: 1, 0.15
+
+<StartScreen>:  
+	game_button: gamebuttonid
+	FloatLayout:
+		Label:
+			font_name: 'moonhouse'
+			text: "[size=80]S[/size]pace\n\n   [size=80]B[/size]allistics"
+			font_size: '50sp'
+			markup: True
+			halign: 'left'
+			pos_hint: {'y': 0.33}
+    BoxLayout:
+		orientation: 'vertical'
+		padding: root.width/8.0
+		spacing: root.width/20
+		size_hint: 1, 0.6
+		pos_hint: {'y': 0.04}
+		Button:
+			id: gamebuttonid
+            text: 'Continue'
+            on_press: root.manager.current = 'level_selection'
+			size_hint: 1, 0.12
+        Button:
+            text: 'Settings'
+            on_press: root.manager.current = 'settings'
+			size_hint: 1, 0.12
+        Button:
+            text: 'Quit'
+			on_press: app.stop() 
+			size_hint: 1, 0.12
+
+<LevelSelectionScreen>:
+	gridlayout: gridlayoutid
+	Label: 
+		text: "Select Level"
+		
+		pos_hint: {'y': 0.3}
+		font_name: 'moonhouse'		
+		font_size: '50sp'
+		markup: True
+		halign: 'center'
+	GridLayout:
+		id: gridlayoutid
+		cols: 5
+		rows: 4
+		spacing: root.width/40
+		padding: root.width/10.0
+		size_hint: 1, 0.50
+		pos_hint: {'y': 0.165}
+
+
+
+
+	
+
+		
+					
