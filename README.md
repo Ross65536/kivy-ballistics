@@ -1,5 +1,7 @@
 # Space Ballistics
 A game app called "Space Ballistics" developed with the kivy framework on python.
+This game has a native physics 'engine' that attempts to simulate bullet trajectories and collisions in a 2D space populated with planets. The game is divided in levels where the goal is to destroy or 'consume' the target planet.
+
 I developed this app in my free time to try to learn about python and the game development process, so the app may not be 'complete' (namely I had to disable sdl sounds because they wouldn't run on the android launcher.)
 	
 If you have questions, you can contact me at: liandtow@gmail.com
